@@ -42,4 +42,8 @@ public class DragCam : MonoBehaviour
     void DragUp(){
         isDraging = false;
     }
+    
+    public void ResetPosition(){
+        transform.position = originPos;
+    }
 }

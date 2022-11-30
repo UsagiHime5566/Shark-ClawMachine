@@ -316,17 +316,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDollList: {fileID: 11400000, guid: cf178df031b317d41b27afeb650a73fe, type: 2}
-  mainCamera: {fileID: 519420031}
+  mainCamera: {fileID: 519420030}
   Claw: {fileID: 187324272}
   BTN_MoveClaw: {fileID: 2055017232}
   BTN_GameStart: {fileID: 2133006518}
+  TXT_PlayTurn: {fileID: 1005537621}
+  TXT_Speed: {fileID: 1120483666}
+  TXT_Catch: {fileID: 1016574420}
   ListContainer: {fileID: 22594703}
   Prefab_DollItem: {fileID: 9073479731407780556, guid: a8c67f655b6ad80498d588d61b20732f,
     type: 3}
-  camStartX: 13
+  camRightLimitX: 13
   camDuration: 3
+  canDrag: 0
   POP_GameStart: GameStart
-  POP_GameEnd: GameEnd
+  POP_GameGet: GameGet
+  POP_GameFail: GameFail
+  POP_GameSpeedUp: GameSpeedUp
   dollPos1: {fileID: 2078265312}
   dollPos2: {fileID: 1023868110}
   dollPos3: {fileID: 1817852991}
@@ -335,7 +341,19 @@ MonoBehaviour:
   Prefab_DollGameObject: {fileID: 3961124639014510117, guid: 010d8f0736b1f7a428c511b3c588e63a,
     type: 3}
   dollCreateDelay: 300
+  diffSpeed:
+  - "\u666E\u901A"
+  - "\u5FEB\u901F"
+  - "\u8D85\u7D1A\u5FEB"
+  diffSpeedValue:
+  - 1
+  - 2
+  - 4
   stageDolls: []
+  currentTurn: 0
+  catchNumber: 0
+  unlockList: []
+  CatchSuccessDistance: 1
 --- !u!114 &114534734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2852,9 +2870,10 @@ Transform:
   m_LocalPosition: {x: -0.75, y: 3.4, z: 0}
   m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
   m_Children:
+  - {fileID: 1697811858}
   - {fileID: 1133920010}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &187324272
 MonoBehaviour:
@@ -2882,6 +2901,7 @@ MonoBehaviour:
   shakeE: 1
   HandDown: -3.3
   HandDuration: 1
+  clawCollider: {fileID: 1133920013}
 --- !u!1 &212976226
 GameObject:
   m_ObjectHideFlags: 0
@@ -4456,7 +4476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4319b9106e2bbe9499680d7636cc3489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragSource: {fileID: 0}
+  dragSource: {fileID: 968448933}
+  dragSpeed: 0.01
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -6448,7 +6469,7 @@ Transform:
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1090068522
 GameObject:
@@ -6630,7 +6651,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u5FEB\u901F"
+  m_text: "\u666E\u901A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7e88846e52a088e4c852299ce96ac082, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 6205f988fccf4e84e8aa3a6f0f845203, type: 2}
@@ -6717,6 +6738,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1133920010}
   - component: {fileID: 1133920011}
+  - component: {fileID: 1133920013}
+  - component: {fileID: 1133920012}
+  - component: {fileID: 1133920014}
   m_Layer: 0
   m_Name: Clow Neck
   m_TagString: Untagged
@@ -6737,9 +6761,8 @@ Transform:
   m_Children:
   - {fileID: 735855316}
   - {fileID: 1317013267}
-  - {fileID: 1697811858}
   m_Father: {fileID: 187324271}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1133920011
 SpriteRenderer:
@@ -6791,6 +6814,65 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &1133920012
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133920009}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &1133920013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133920009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28ee1bec7015d04ca1abeedc60c71b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &1133920014
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133920009}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -1.75}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.24}
+    oldSize: {x: 0.88, y: 6}
+    newSize: {x: 1.48, y: 4.03}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.5}
+  m_EdgeRadius: 0
 --- !u!1 &1146529945
 GameObject:
   m_ObjectHideFlags: 0
@@ -10651,11 +10733,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1697811855}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.75, z: -10}
+  m_LocalPosition: {x: 0, y: -2.1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1133920010}
-  m_RootOrder: 2
+  m_Father: {fileID: 187324271}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1817852989
 GameObject:
@@ -10685,7 +10767,7 @@ Transform:
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1829531424
 GameObject:
@@ -11144,7 +11226,7 @@ Transform:
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2079474529
 GameObject:

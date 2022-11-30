@@ -8,6 +8,7 @@ public class DollGameObject : MonoBehaviour
     public DollData dollData;
     public void Setup(DollData data){
         sptr.sprite = data.useSprite;
+        gameObject.name = data.name;
         dollData = data;
     }
 }
