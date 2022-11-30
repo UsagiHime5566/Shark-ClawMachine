@@ -35,7 +35,7 @@ public class ClawBody : MonoBehaviour
     void Update()
     {
         transform.Translate(currentSpeed * Time.deltaTime, 0, 0);
-        if(transform.position.x > FocusCamera.transform.position.x){
+        if(transform.position.x > FocusCamera.transform.position.x && currentSpeed > 0){
             FocusCamera.transform.position = new Vector3(transform.position.x, FocusCamera.transform.position.y, FocusCamera.transform.position.z);
         }
     }
