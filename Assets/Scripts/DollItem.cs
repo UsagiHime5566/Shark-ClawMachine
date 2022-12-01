@@ -17,7 +17,6 @@ public class DollItem : MonoBehaviour
         Icon.sprite = spt;
         IconHide.sprite = spt;
         Name.text = n;
-        NameHide.text = n;
 
         dollName = n;
     }
