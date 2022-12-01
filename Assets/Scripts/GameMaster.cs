@@ -16,6 +16,7 @@ public class GameMaster : MonoBehaviour
     public ClawBody Claw;
     public ClawButton BTN_MoveClaw;
     public Button BTN_GameStart;
+    public GameObject FinishedTitle;
 
     //Game UI
     [Header("Game UI")]
@@ -225,14 +226,22 @@ public class GameMaster : MonoBehaviour
     }
 
     public void RefreshDollList(){
+        int totalUnlock = 0;
         foreach (var item in dollItems)
         {
             foreach (var unlock in unlockList)
             {
                 if(item.dollName == unlock){
                     item.Unlock();
+                    totalUnlock++;
+                    break;
                 }
             }
+        }
+
+        Debug.Log($"目前解鎖數量:{totalUnlock}/{dollItems.Count}");
+        if(totalUnlock >= dollItems.Count){
+            FinishedTitle.SetActive(true);
         }
     }
 }
